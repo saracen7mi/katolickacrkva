@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -130,3 +130,164 @@
     </script>
 </body>
 </html>
+ -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0">
+    <title>Katolička crkva u Kladnju</title>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        a-scene {
+            width: 90%;
+            height: 80vh;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- AUDIO -->
+    <audio id="audio-bosnian" preload="auto">
+        <source src="https://raw.githubusercontent.com/saracen7mi/katolickacrkva/main/katolickacrkvabosanski.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-english" preload="auto">
+        <source src="https://raw.githubusercontent.com/saracen7mi/katolickacrkva/main/katolickacrkvaengleski.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-german" preload="auto">
+        <source src="https://raw.githubusercontent.com/saracen7mi/katolickacrkva/main/katolickacrkvanjemacki.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-italian" preload="auto">
+        <source src="https://raw.githubusercontent.com/saracen7mi/katolickacrkva/main/katolickacrkvaitalijanski.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-turkish" preload="auto">
+        <source src="https://raw.githubusercontent.com/saracen7mi/katolickacrkva/main/katolickacrkvaturski.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SCENA -->
+    <a-scene embedded arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;">
+        <a-plane color="#008000" height="3.5" width="6.5" position="0 0.5 -5" opacity="0.9"></a-plane>
+
+        <!-- GRBOVI -->
+        <a-entity 
+            gltf-model="https://cdn.jsdelivr.net/gh/saracen7mi/katolickacrkva@main/grbdrzave3d.glb" 
+            position="-2 1 -5" scale="1 1 1" rotation="0 240 0" 
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 5000">
+        </a-entity>
+        <a-entity 
+            gltf-model="https://cdn.jsdelivr.net/gh/saracen7mi/katolickacrkva@main/grbOpstine.glb" 
+            position="2 1 -5" scale="1 1 1" rotation="0 240 0" 
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 5000">
+        </a-entity>
+
+        <!-- DUGMAD ZA JEZIKE -->
+        <a-entity id="eng-button" geometry="primitive: plane; height: 0.5; width: 1.5"
+                  material="color: red" position="-2.5 2 -4.9"
+                  text="value: ENG; color: white; align: center; width: 3;">
+        </a-entity>
+        <a-entity id="deu-button" geometry="primitive: plane; height: 0.5; width: 1.5"
+                  material="color: yellow" position="-1 2 -4.9"
+                  text="value: DEU; color: black; align: center; width: 3;">
+        </a-entity>
+        <a-entity id="ita-button" geometry="primitive: plane; height: 0.5; width: 1.5"
+                  material="color: blue" position="0.5 2 -4.9"
+                  text="value: ITA; color: white; align: center; width: 3;">
+        </a-entity>
+        <a-entity id="tur-button" geometry="primitive: plane; height: 0.5; width: 1.5"
+                  material="color: brown" position="2 2 -4.9"
+                  text="value: TUR; color: white; align: center; width: 3;">
+        </a-entity>
+
+        <!-- TEKST -->
+        <a-entity position="0 0.8 -4.9">
+            <a-text value=" Crkva sv. Ivana Krstitelja u Kladnju svjedoci o dugogodisnjem prisustvu katolicke zajednice na ovim prostorima. Prema istorijskim podacima, u Kladnju je nekada živio značajan broj katolika, a među njima se posebno izdvajala porodica Čaja. Članovi ove porodice su uz pomoć komšija i imućnijih Kladnjana izgradili porodičnu crkvu kao mjesto molitve i okupljanja vjernika. Nažalost, prije rata, oko 1980. godine, crkva je propala i postala nefunkcionalna, a tokom rata je pretrpjela značajna oštećenja, gotovo do potpunog uništenja. Kao rezultat poslijeratnih radova na obnovi, crkva je svečano otvorena 1998. godine i ova svečanost, kojoj je prisustvovao kardinal Vinko Puljić, bila je važan trenutak za katoličku zajednicu u Kladnju. Danas se crkva nalazi u ulici Kladanjskih Brigada kod Osnovne skole Kladanj i nastavlja svoju vjersku i kulturnu ulogu, podsjecajuci na bogatu istoriju i suzivot razlicitih zajednica grada."
+                    color="#FFFF00" width="5.5" wrap-count="50" align="center" scale="0.5 0.5 0.5">
+            </a-text>
+        </a-entity>
+
+        <!-- KAMERA I KURSOR -->
+        <a-entity camera look-controls position="0 0 0" fov="85">
+            <a-cursor color="#FF0000" radius="0.05"></a-cursor>
+        </a-entity>
+    </a-scene>
+
+    <!-- JS: AUDIO LOGIKA -->
+    <script>
+        let bosnianAudio = document.getElementById('audio-bosnian');
+        let englishAudio = document.getElementById('audio-english');
+        let germanAudio = document.getElementById('audio-german');
+        let italianAudio = document.getElementById('audio-italian');
+        let turkishAudio = document.getElementById('audio-turkish');
+
+        function stopAllAudio() {
+            [bosnianAudio, englishAudio, germanAudio, italianAudio, turkishAudio].forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        }
+
+        function playAudio(audioElement) {
+            if (!audioElement || !audioElement.src) {
+                console.warn('Audio element nije definisan ili nema izvor.');
+                return;
+            }
+            stopAllAudio();
+            audioElement.play().then(() => {
+                console.log('Audio pokrenut:', audioElement.id);
+            }).catch(error => {
+                console.warn('Reprodukcija nije uspjela:', error);
+            });
+        }
+
+        // Dugmad za druge jezike
+        document.getElementById('eng-button').addEventListener('mouseenter', () => playAudio(englishAudio));
+        document.getElementById('deu-button').addEventListener('mouseenter', () => playAudio(germanAudio));
+        document.getElementById('ita-button').addEventListener('mouseenter', () => playAudio(italianAudio));
+        document.getElementById('tur-button').addEventListener('mouseenter', () => playAudio(turkishAudio));
+
+        // Pokreni bosanski audio na prvi klik
+        window.addEventListener('load', () => {
+            document.body.addEventListener('click', () => {
+                if (bosnianAudio.paused) {
+                    playAudio(bosnianAudio);
+                }
+            }, { once: true });
+        });
+
+        // Dijagnostika za modele
+        document.querySelectorAll('a-entity[gltf-model]').forEach(entity => {
+            entity.addEventListener('model-loaded', () => {
+                console.log('Model učitan:', entity.getAttribute('gltf-model'));
+            });
+            entity.addEventListener('model-error', (e) => {
+                console.error('Greška pri učitavanju modela:', e.detail, entity.getAttribute('gltf-model'));
+            });
+        });
+
+        // Dijagnostika za audio
+        document.querySelectorAll('audio').forEach(audio => {
+            audio.addEventListener('loadeddata', () => {
+                console.log('Audio učitan:', audio.id);
+            });
+            audio.addEventListener('error', (e) => {
+                console.error('Greška pri učitavanju audio:', audio.id, e);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+ 
